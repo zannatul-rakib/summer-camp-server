@@ -43,7 +43,8 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    // await
+    client.connect();
 
     const yogaClassesCollection = client
       .db("yogaKids")
@@ -85,11 +86,12 @@ async function run() {
     app.get("/classes/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
+      console.log(query);
       const result = await yogaClassesCollection.findOne(query);
       res.send(result);
     });
 
-    app.post("/classes", verifyToken, verifyAdmin, async (req, res) => {
+    app.post("/classes", verifyToken, async (req, res) => {
       const newItem = req.body;
       const result = await yogaClassesCollection.insertOne(newItem);
       res.send(result);
@@ -147,7 +149,7 @@ async function run() {
     });
 
     // users collection
-    app.get("/users", verifyToken, verifyAdmin, async (req, res) => {
+    app.get("/users", verifyToken, async (req, res) => {
       const result = await usersCollection.find().toArray();
       res.send(result);
     });
@@ -182,7 +184,7 @@ async function run() {
       res.send(result);
     });
 
-    app.delete("/users/:id", verifyToken, verifyAdmin, async (req, res) => {
+    app.delete("/users/:id", verifyToken, async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await usersCollection.deleteOne(query);
